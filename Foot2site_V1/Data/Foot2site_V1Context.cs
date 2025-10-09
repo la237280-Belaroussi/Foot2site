@@ -16,6 +16,9 @@ namespace Foot2site_V1.Data
 
         public DbSet<Foot2site_V1.Modele.Taille> Taille { get; set; } = default!;
 
+        public DbSet<Foot2site_V1.Modele.Produit> Produit { get; set; } = default!;
+        
+        // commenataire de test
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +44,6 @@ namespace Foot2site_V1.Data
                 new Enseignant { Id = 2, Nom = "Alary", Prenom = "Philippe", Email = "alaryp@helha.be" }
             );*/
         }
-        public DbSet<Foot2site_V1.Modele.Produit> Produit { get; set; } = default!;
+        
     }
 }
