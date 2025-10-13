@@ -8,6 +8,7 @@
 
         public Boolean Paye { get; set; }
 
+        public List<Ligne_Commande> lignes_Commande { get; set; }
 
     }
 }

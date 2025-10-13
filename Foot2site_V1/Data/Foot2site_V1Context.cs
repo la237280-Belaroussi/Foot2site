@@ -73,6 +73,7 @@ namespace Foot2site_V1.Data
                 }
             );
         }
+        public DbSet<Foot2site_V1.Modele.Commande> Commande { get; set; } = default!;
       
     }
 }
