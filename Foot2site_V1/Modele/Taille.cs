@@ -6,7 +6,7 @@
 
         public string taille { get; set; }
 
-        public List<Produit> ProduitList { get; set; }
+        public List<Stock_produit> Stock_Produits_List { get; set; }
 
     }
 }

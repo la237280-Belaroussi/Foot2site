@@ -6,8 +6,12 @@
 
         public int quantite { get; set; }
 
+        // Clé étrangère vers Produit
+        public int id_PRODUIT { get; set; }
         public Produit produit { get; set; }
 
-        public List <Taille> taille {  get; set; }
+        // Clé étrangère vers Taille
+        public int id_TAILLE { get; set; }
+        public Taille taille { get; set; }
     }
 }
