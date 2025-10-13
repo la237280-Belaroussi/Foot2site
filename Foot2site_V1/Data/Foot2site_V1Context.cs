@@ -40,8 +40,8 @@ namespace Foot2site_V1.Data
                 .HasForeignKey(t => t.Id_User);
 
             modelBuilder.Entity<Transaction>()
-    .Property(t => t.Montant_operation)
-    .HasColumnType("decimal(10,2)");
+            .Property(t => t.Montant_operation)
+            .HasColumnType("decimal(10,2)");
 
 
             modelBuilder.Entity<Transaction>()
@@ -117,7 +117,12 @@ namespace Foot2site_V1.Data
                     id_TAILLE = 4  // Taille L 
                 }
             );
+
+            modelBuilder.Entity<Type_Operation>().HasData(
+            new Type_Operation { Id_Type_Operation = 1, Nom_Type_Operation = "RECHARGE" },
+            new Type_Operation { Id_Type_Operation = 2, Nom_Type_Operation = "DEBIT" }
+            );
         }
-      
+
     }
 }
