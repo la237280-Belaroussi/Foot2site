@@ -90,6 +90,7 @@ namespace Foot2site_V1.Data
                 }
             );
         }
+        public DbSet<Foot2site_V1.Modele.Ligne_Commande> Ligne_Commande { get; set; } = default!;
       
       
     }
