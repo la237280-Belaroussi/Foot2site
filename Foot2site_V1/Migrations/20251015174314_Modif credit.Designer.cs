@@ -4,6 +4,7 @@ using Foot2site_V1.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foot2site_V1.Migrations
 {
     [DbContext(typeof(Foot2site_V1Context))]
-    partial class Foot2site_V1ContextModelSnapshot : ModelSnapshot
+    [Migration("20251015174314_Modif credit")]
+    partial class Modifcredit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,11 +72,14 @@ namespace Foot2site_V1.Migrations
                     b.Property<int>("quantite")
                         .HasColumnType("int");
 
+                    b.Property<int>("stock_ProduitId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id_COMMANDE");
 
-                    b.HasIndex("Id_STOCK_PRODUIT");
+                    b.HasIndex("stock_ProduitId");
 
                     b.ToTable("Ligne_Commande");
                 });
@@ -233,9 +239,6 @@ namespace Foot2site_V1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Credit")
-                        .HasColumnType("float");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -277,8 +280,8 @@ namespace Foot2site_V1.Migrations
                         .IsRequired();
 
                     b.HasOne("Foot2site_V1.Modele.Stock_produit", "stock_Produit")
-                        .WithMany("lignesCommande")
-                        .HasForeignKey("Id_STOCK_PRODUIT")
+                        .WithMany()
+                        .HasForeignKey("stock_ProduitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -333,11 +336,6 @@ namespace Foot2site_V1.Migrations
             modelBuilder.Entity("Foot2site_V1.Modele.Produit", b =>
                 {
                     b.Navigation("stocks");
-                });
-
-            modelBuilder.Entity("Foot2site_V1.Modele.Stock_produit", b =>
-                {
-                    b.Navigation("lignesCommande");
                 });
 
             modelBuilder.Entity("Foot2site_V1.Modele.Taille", b =>

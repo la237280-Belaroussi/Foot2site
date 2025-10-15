@@ -24,6 +24,7 @@ namespace Foot2site_V1.Data
         public DbSet<Foot2site_V1.Modele.Transaction> Transaction { get; set; } = default!;
         public DbSet<Foot2site_V1.Modele.Type_Operation> Type_Operation { get; set; } = default!;
         public DbSet<Foot2site_V1.Modele.Commande> Commande { get; set; } = default!;
+        public DbSet<Foot2site_V1.Modele.Ligne_Commande> Ligne_Commande { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,8 +53,12 @@ namespace Foot2site_V1.Data
                 .WithOne(ligne => ligne.commande)
                 .HasForeignKey(ligne => ligne.Id_COMMANDE);
 
-            // Configuration de la table TRANSACTION
-            // Relation Transaction -> Utilisateur
+            // Relation LigneCommande -> StockProduit
+            modelBuilder.Entity<Ligne_Commande>()
+                .HasOne(ligne => ligne.stock_Produit)
+                .WithMany(stock => stock.lignesCommande)
+                .HasForeignKey(ligne => ligne.Id_STOCK_PRODUIT);    
+
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Utilisateur)
                 .WithMany(u => u.Transactions)
@@ -154,7 +159,7 @@ namespace Foot2site_V1.Data
                 new Taille { Id = 6, taille = "XLL" }*/
             );
         }
-        public DbSet<Foot2site_V1.Modele.Ligne_Commande> Ligne_Commande { get; set; } = default!;
+       
       
       
     }
