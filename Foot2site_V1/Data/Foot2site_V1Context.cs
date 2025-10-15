@@ -94,7 +94,7 @@ namespace Foot2site_V1.Data
             /*modelBuilder.Entity<Produit>().HasData(
                 new Produit 
                 { 
-                    Id = 1,
+                    Id_User = 1,
                     nom_produit = "Maillot Barcelone 2017",
                     description_produit = "le maillot du barcelone à domicile de 2017", 
                     prix_unitaire_produit = 65.00
@@ -102,7 +102,7 @@ namespace Foot2site_V1.Data
 
                 new Produit
                 {
-                    Id = 2,
+                    Id_User = 2,
                     nom_produit = "Maillot Real Madrid 2014",
                     description_produit = "le maillot du Real Madrid à l'extérieur de 2014",
                     prix_unitaire_produit = 80.00
@@ -115,7 +115,7 @@ namespace Foot2site_V1.Data
            /* modelBuilder.Entity<Stock_produit>().HasData(
                 new Stock_produit
                 {
-                    Id = 1,
+                    Id_User = 1,
                     quantite = 10,
                     id_PRODUIT = 1,  // Maillot Barcelone 
                     id_TAILLE = 2  // Taille S
@@ -124,7 +124,7 @@ namespace Foot2site_V1.Data
 
                 new Stock_produit
                 {
-                    Id = 2,
+                    Id_User = 2,
                     quantite = 20,
                     id_PRODUIT = 1,  // Maillot Barcelone 
                     id_TAILLE = 1  // Taille XS
@@ -132,7 +132,7 @@ namespace Foot2site_V1.Data
 
                 new Stock_produit
                 {
-                    Id = 3,
+                    Id_User = 3,
                     quantite = 20,
                     id_PRODUIT = 2,  // Maillot Real Madrid 
                     id_TAILLE = 4  // Taille L 
