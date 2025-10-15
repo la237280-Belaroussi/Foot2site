@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Foot2site_V1.Modele;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Foot2site_V1.Modele;
 
 namespace Foot2site_V1.Data
 {
@@ -18,6 +20,8 @@ namespace Foot2site_V1.Data
         public DbSet<Foot2site_V1.Modele.Stock_produit> Stock_produit { get; set; } = default!;
         public DbSet<Foot2site_V1.Modele.User> User { get; set; } = default!;
         public DbSet<Foot2site_V1.Modele.Produit> Produit { get; set; } = default!;
+        public DbSet<Foot2site_V1.Modele.Transaction> Transaction { get; set; } = default!;
+        public DbSet<Foot2site_V1.Modele.Type_Operation> Type_Operation { get; set; } = default!;
 
         public DbSet<Foot2site_V1.Modele.Commande> Commande { get; set; } = default!;
 
@@ -48,6 +52,20 @@ namespace Foot2site_V1.Data
                 .HasMany(commande => commande.lignes_Commande)
                 .WithOne(ligne => ligne.commande)
                 .HasForeignKey(ligne => ligne.Id_COMMANDE);
+            modelBuilder.Entity<Transaction>()
+              .HasOne(t => t.Utilisateur)
+              .WithMany(u => u.Transactions)
+              .HasForeignKey(t => t.Id_User);
+
+            modelBuilder.Entity<Transaction>()
+            .Property(t => t.Montant_operation)
+            .HasColumnType("decimal(10,2)");
+
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.TypeOperation)
+                .WithMany(to => to.Transactions)
+                .HasForeignKey(t => t.Id_TYPE_OPERATION);
 
 
             /*modelBuilder.Entity<Enseignant>()
@@ -60,7 +78,7 @@ namespace Foot2site_V1.Data
 
 
             // Ajouter des produits
-            modelBuilder.Entity<Produit>().HasData(
+            /*modelBuilder.Entity<Produit>().HasData(
                 new Produit 
                 { 
                     Id = 1,
@@ -69,26 +87,58 @@ namespace Foot2site_V1.Data
                     prix_unitaire_produit = 65.00
                 }
 
-            );
+                new Produit
+                {
+                    Id = 2,
+                    nom_produit = "Maillot Real Madrid 2014",
+                    description_produit = "le maillot du Real Madrid à l'extérieur de 2014",
+                    prix_unitaire_produit = 80.00
+                }
+
+            );*/
 
             // Ajouter des tailles
             modelBuilder.Entity<Taille>().HasData(
                 new Taille { Id = 1, taille = "XS" },
                 new Taille { Id = 2, taille = "S" },
                 new Taille { Id = 3, taille = "M" }
+                /*new Taille { Id = 4, taille = "L" },
+                new Taille { Id = 5, taille = "XL" },
+                new Taille { Id = 6, taille = "XLL" }*/
             );
 
             // Ajouter des stocks
-            modelBuilder.Entity<Stock_produit>().HasData(
+           /* modelBuilder.Entity<Stock_produit>().HasData(
                 new Stock_produit
                 {
                     Id = 1,
                     quantite = 10,
                     id_PRODUIT = 1,  // Maillot Barcelone 
-                    id_TAILLE = 2,  // Taille S
+                    id_TAILLE = 2  // Taille S
 
+                },
+
+                new Stock_produit
+                {
+                    Id = 2,
+                    quantite = 20,
+                    id_PRODUIT = 1,  // Maillot Barcelone 
+                    id_TAILLE = 1  // Taille XS
+                },
+
+                new Stock_produit
+                {
+                    Id = 3,
+                    quantite = 20,
+                    id_PRODUIT = 2,  // Maillot Real Madrid 
+                    id_TAILLE = 4  // Taille L 
                 }
-            );
+            );*/
+
+            modelBuilder.Entity<Type_Operation>().HasData(
+           new Type_Operation { Id_Type_Operation = 1, Nom_Type_Operation = "RECHARGE" },
+           new Type_Operation { Id_Type_Operation = 2, Nom_Type_Operation = "DEBIT" }
+           );
         }
         public DbSet<Foot2site_V1.Modele.Ligne_Commande> Ligne_Commande { get; set; } = default!;
       
