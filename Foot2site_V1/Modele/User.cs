@@ -17,8 +17,6 @@ namespace Foot2site_V1.Modele
 
         public string Adresse { get; set; }
 
-        public double Credit { get; set; }
-
 
         // Relation avec les commandes
         public virtual List<Commande> commandes { get; set; }
