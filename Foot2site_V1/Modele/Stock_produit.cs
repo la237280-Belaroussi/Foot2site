@@ -17,7 +17,6 @@ namespace Foot2site_V1.Modele
         // Clé étrangère vers Taille
         public int id_TAILLE { get; set; }
 
-        [JsonIgnore]
         public Taille? taille { get; set; }
 
         [JsonIgnore]

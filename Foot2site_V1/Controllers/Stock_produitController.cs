@@ -25,7 +25,9 @@ namespace Foot2site_V1.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Stock_produit>>> GetStock_produit()
         {
-            return await _context.Stock_produit.ToListAsync();
+            return await _context.Stock_produit
+                .Include(t => t.taille)
+                .ToListAsync();
         }
 
         // GET: api/Stock_produit/5
