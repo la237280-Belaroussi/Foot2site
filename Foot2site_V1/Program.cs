@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Foot2site_V1.Data;
+using System.Reflection;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Foot2site_V1Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Foot2site_V1Context") ?? throw new InvalidOperationException("Connection string 'Foot2site_V1Context' not found.")));
@@ -10,7 +13,31 @@ builder.Services.AddDbContext<Foot2site_V1Context>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    // Informations générales sur l'API
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Foot2sité API",
+        Description = "API REST pour la gestion de la boutique de maillots de football",
+        Contact = new OpenApiContact
+        {
+            Name = "Équipe Foot2sité",
+            Email = "la227472@student.helha.be"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Utilisation libre",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 
