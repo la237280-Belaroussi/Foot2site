@@ -12,7 +12,6 @@ import { JWT } from '../Interface/JWT';
 export class ConnectionService {
 
   private readonly KEY_TOKEN = 'authToken';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private apiUrl = environment.apiUrl;
 
   isAuthenticated = signal<boolean>(this.hasToken());
@@ -24,7 +23,7 @@ export class ConnectionService {
 
   public login(credentials:{username: string; password:string}): Observable<JWT> {
     const body = new URLSearchParams();
-    body.set('username', credentials.username);
+    body.set('email', credentials.username);
     body.set('password', credentials.password);
 
     // Headers pour form-urlencoded
@@ -43,7 +42,6 @@ export class ConnectionService {
         if (response.token) {
           localStorage.setItem(this.KEY_TOKEN, response.token);
         }
-        //localStorage.setItem();
       })
     );
   }
