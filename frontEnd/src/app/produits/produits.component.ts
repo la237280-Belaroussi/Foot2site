@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-produits',
@@ -16,62 +17,52 @@ export class ProduitsComponent implements OnInit {
   };
   editProduit: any = null;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.getProduits();
   }
 
   getProduits() {
-    this.produits = [
-      {
-        id: 1,
-        nom_produit: "T-shirt",
-        description_produit: "T-shirt coton",
-        prix_unitaire_produit: 20,
-        stocks: [
-          { quantite: 10, taille: { taille: "S" } },
-          { quantite: 5, taille: { taille: "M" } }
-        ]
-      },
-      {
-        id: 2,
-        nom_produit: "Jean",
-        description_produit: "Jean slim",
-        prix_unitaire_produit: 50,
-        stocks: [
-          { quantite: 8, taille: { taille: "L" } }
-        ]
-      }
-    ];
+    this.http.get<any[]>('/api/Produits').subscribe({
+      next: (data) => this.produits = data,
+      error: (err) => console.error('Erreur lors du chargement des produits', err)
+    });
   }
 
   getProduitById(id: number) {
-    const produit = this.produits.find(p => p.id === id);
-    if (produit) {
-      this.editProduit = { ...produit };
-    } else {
-      console.warn('Produit non trouvé avec cet ID :', id);
-    }
+    this.http.get<any>(`/api/Produits/${id}`).subscribe({
+      next: (data) => this.editProduit = data,
+      error: (err) => console.error('Produit non trouvé', err)
+    });
   }
 
   ajouterProduit() {
-    const newId = this.produits.length ? Math.max(...this.produits.map(p => p.id)) + 1 : 1;
-    const produit = { ...this.nouveauProduit, id: newId };
-    this.produits.push(produit);
-    this.nouveauProduit = { nom_produit: '', description_produit: '', prix_unitaire_produit: 0, stocks: [] };
+    this.http.post<any>('/api/Produits', this.nouveauProduit).subscribe({
+      next: (data) => {
+        this.produits.push(data);
+        this.nouveauProduit = { nom_produit: '', description_produit: '', prix_unitaire_produit: 0, stocks: [] };
+      },
+      error: (err) => console.error('Erreur lors de l’ajout du produit', err)
+    });
   }
 
   sauverEdition() {
-    const index = this.produits.findIndex(p => p.id === this.editProduit.id);
-    if (index !== -1) {
-      this.produits[index] = { ...this.editProduit };
-    }
-    this.editProduit = null;
+    this.http.put<any>(`/api/Produits/${this.editProduit.id}`, this.editProduit).subscribe({
+      next: (data) => {
+        const index = this.produits.findIndex(p => p.id === data.id);
+        if (index !== -1) this.produits[index] = data;
+        this.editProduit = null;
+      },
+      error: (err) => console.error('Erreur lors de la modification', err)
+    });
   }
 
   supprimerProduit(id: number) {
-    this.produits = this.produits.filter(p => p.id !== id);
+    this.http.delete(`/api/Produits/${id}`).subscribe({
+      next: () => this.produits = this.produits.filter(p => p.id !== id),
+      error: (err) => console.error('Erreur lors de la suppression', err)
+    });
   }
 
   annulerEdition() {
