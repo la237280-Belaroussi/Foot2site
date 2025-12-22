@@ -16,6 +16,8 @@
     border: none;
   }
   
+/** css commun **/
+
 :root {
     --bg-top: #cfe9f6;
     --bg-bottom: #96b0c9;
