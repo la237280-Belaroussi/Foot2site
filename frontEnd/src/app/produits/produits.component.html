@@ -1,0 +1,39 @@
+<h1>Liste des produits</h1>
+
+<h2>Ajouter un produit</h2>
+<form (ngSubmit)="ajouterProduit()">
+  <input type="text" placeholder="Nom" [(ngModel)]="nouveauProduit.nom_produit" name="nom" required />
+  <input type="text" placeholder="Description" [(ngModel)]="nouveauProduit.description_produit" name="desc" required />
+  <input type="number" placeholder="Prix" [(ngModel)]="nouveauProduit.prix_unitaire_produit" name="prix" required />
+  <button type="submit">Ajouter</button>
+</form>
+
+<hr />
+
+<div *ngFor="let produit of produits" class="produit-card">
+  <div *ngIf="editProduit?.id === produit.id">
+    <input type="text" [(ngModel)]="editProduit.nom_produit" />
+    <input type="text" [(ngModel)]="editProduit.description_produit" />
+    <input type="number" [(ngModel)]="editProduit.prix_unitaire_produit" />
+    <button (click)="sauverEdition()">Sauver</button>
+    <button (click)="annulerEdition()">Annuler</button>
+  </div>
+
+  <div *ngIf="editProduit?.id !== produit.id">
+    <h2>{{ produit.nom_produit }}</h2>
+    <p>{{ produit.description_produit }}</p>
+    <p><strong>Prix :</strong> {{ produit.prix_unitaire_produit }} €</p>
+
+    <div *ngIf="produit.stocks?.length">
+      <p><strong>Stocks :</strong></p>
+      <ul>
+        <li *ngFor="let stock of produit.stocks">
+          Taille {{ stock.taille.taille }} : {{ stock.quantite }}
+        </li>
+      </ul>
+    </div>
+
+    <button (click)="getProduitById(produit.id)">Modifier</button>
+    <button (click)="supprimerProduit(produit.id)">Supprimer</button>
+  </div>
+</div>
