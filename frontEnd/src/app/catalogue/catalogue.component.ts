@@ -1,13 +1,36 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { PanierComponent } from '../panier/panier.component';
+import { CartService } from '../Service/cart.service';
+import { CompositionService } from '../Service/composition.service';
 
 @Component({
   selector: 'app-catalogue',
-  imports: [CommonModule, PanierComponent],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './catalogue.component.html',
-  styleUrl: './catalogue.component.css'
+  styleUrls: ['./catalogue.component.css']
 })
-export class CatalogueComponent {
+export class CatalogueComponent implements OnInit {
 
+  products: any[] = [];
+
+  constructor(
+    private compositionService: CompositionService,
+    private cartService: CartService
+  ) {}
+
+  ngOnInit() {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.compositionService.getAll().subscribe({
+      next: (data: any) => this.products = data,
+      error: (err: any) => console.error(err)
+    });
+  }
+
+  addToCart(product: any) {
+    this.cartService.addToCart(product);
+  }
 }

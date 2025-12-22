@@ -1,5 +1,11 @@
 <h1>Boutique</h1>
-
 <hr>
 
-<app-panier></app-panier>
+<div class="grid">
+  <div class="card" *ngFor="let p of products">
+    <img src="assets/tshirt.jpg" alt="{{ p.name }}">
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.price }} €</p>
+    <button (click)="addToCart(p)">Ajouter au panier</button>
+  </div>
+</div>

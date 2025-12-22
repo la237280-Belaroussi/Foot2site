@@ -1,24 +1,26 @@
 <h2>Mon Panier</h2>
 
-<div *ngFor="let item of cartItems.getCart()">
-  <h4>{{ item.name }}</h4>
-  <p>{{ item.price }} €</p>
-  <img [src]="item.image">
+<div *ngIf="cartService.getCart().length === 0"> <p class="empty">Aucun article dans votre panier</p> </div>
+
+<div class="item" *ngFor="let item of cartService.getCart()">
+  
+  <img [src]="item.image" alt="{{ item.name }}" />
 
   <div class="info">
     <h3>{{ item.name }}</h3>
     <p>{{ item.description }}</p>
+    <p>{{ item.price }} €</p>
   </div>
 
   <div class="qty">
     <button (click)="cartService.decrease(item.id)">-</button>
     {{ item.quantity }}
     <button (click)="cartService.increase(item.id)">+</button>
-    <button (click)="cartService.remove(item.id)">Supprimer</button>
+    <button (click)="cartService.remove(item.id)">🗑️</button>
   </div>
+
 </div>
 
 <h3>Total : {{ cartService.total() }} €</h3>
+
 <button class="pay">Payer</button>
-
-

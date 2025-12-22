@@ -13,7 +13,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   
     <div class="nav-left">
         <a routerLink="/accueil" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <img src="logo.png" alt="Foot2Site" class="logo" />
+          <img src="assets/logo.png" alt="Foot2Site" class="logo" />
         </a>
     </div>
   
@@ -25,8 +25,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   
       <nav class="nav-right">    
       <a routerLink="panier" routerLinkActive="active">
-        panier
-        <img src="panier.png" alt="Panier" class="icon" />
+        <img src="assets/panier.png" alt="Panier" class="icon" />
       </a>
   
       <a routerLink="/*" routerLinkActive="active">

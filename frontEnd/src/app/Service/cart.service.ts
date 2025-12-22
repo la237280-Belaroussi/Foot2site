@@ -23,15 +23,15 @@ export class CartService {
   }
 
   addToCart(product: any) {
-    const item = this.cart.find(p => p.id === product.id);
+  const item = this.cart.find(p => p.id === product.id);
 
-    if (item) {
-      item.quantity++;
-    } else {
-      this.cart.push(product);
-    }
-    this.saveCart();
+  if (item) {
+    item.quantity++;
+  } else {
+    this.cart.push({ ...product, quantity: 1 });
   }
+  this.saveCart();
+}
 
   increase(id: number) {
     const item = this.cart.find(p => p.id === id);

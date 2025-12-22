@@ -33,7 +33,7 @@ export const routes: Routes = [
 
     {
         path : '',
-        redirectTo : 'connection',
+        redirectTo : 'catalogue',
         pathMatch : 'full',
     }
 ];
