@@ -16,7 +16,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'insci',
+    path: 'inscription',
     component: InscriptionComponent
   },
 
@@ -24,4 +24,5 @@ export const routes: Routes = [
     path: '**',
     redirectTo: ''
   }
+  
 ];

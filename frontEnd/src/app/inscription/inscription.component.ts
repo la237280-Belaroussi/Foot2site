@@ -1,95 +1,123 @@
-import {Component, signal} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
-import {InscriptionService} from '../Service/inscription.service';
-import {CommonModule} from '@angular/common';
+import { Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { InscriptionService } from '../Service/inscription.service';
 
 @Component({
   selector: 'app-inscription',
-  imports: [ReactiveFormsModule,CommonModule,RouterLink],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './inscription.component.html',
-  styleUrl: './inscription.component.css'
+  styleUrls: ['./inscription.component.css']
 })
 export class InscriptionComponent {
-    registerForm: FormGroup;
-    loading = signal(false);
-    errorMessage = signal('');
-    successMessage = signal('');
-    showPassword = signal(false);
 
+  registerForm: FormGroup;
+  loading = false;
+  errorMessage = '';
+  successMessage = '';
+  showPassword = false;
+  emailAlreadyExists = false;
 
-    constructor(
-      private fb: FormBuilder,
-      private inscriptionService: InscriptionService,
-      private router: Router
-    ) {
-      this.registerForm = this.fb.group({
-        firstname: ['', Validators.required],
-        lastname: ['', Validators.required],
+  constructor(
+    private fb: FormBuilder,
+    private inscriptionService: InscriptionService,
+    private router: Router
+  ) {
+    this.registerForm = this.fb.group(
+      {
+        firstname: ['', [Validators.required, Validators.minLength(2)]],
+        lastname: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
+
         password: ['', [Validators.required, Validators.minLength(6)]],
-        // Champs pour l'adresse
+        confirmPassword: ['', Validators.required],
+
         addressNumero: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
         addressRue: ['', [Validators.required, Validators.minLength(3)]],
         addressCode: ['', [Validators.required, Validators.pattern(/^\d{4,5}$/)]]
-      });
-    }
-
-    togglePasswordVisibility(): void {
-      this.showPassword.update(v => !v);
-    }
-
-    onSubmit(): void {
-      if (!this.registerForm.valid) {
-        this.registerForm.markAllAsTouched();
-        this.errorMessage.set('Veuillez remplir tous les champs correctement');
-        return;
+      },
+      {
+        validators: this.passwordsMatchValidator
       }
+    );
 
-      this.loading.set(true);
-      this.errorMessage.set('');
-      this.successMessage.set('');
+    this.registerForm.get('email')?.valueChanges.subscribe(() => {
+      this.emailAlreadyExists = false;
+    });
+  }
 
-      const formValue = this.registerForm.value;
+  passwordsMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirm = form.get('confirmPassword')?.value;
+    return password === confirm ? null : { passwordsMismatch: true };
+  }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
-      const userData = {
-        firstname: formValue.firstname,
-        lastname: formValue.lastname,
-        email: formValue.email,
-        password: formValue.password,
-        address: {
-          numero: parseInt(formValue.addressNumero),
-          rue: formValue.addressRue,
-          code: parseInt(formValue.addressCode)
-        },
-        roles: "client"
-      };
-
-      console.log("DATA ENVOYÉ :", userData);
-
-      this.inscriptionService.registerFull(userData).subscribe({
-        next: () => {
-          this.successMessage.set("Inscription réussie !");
-          setTimeout(() => this.router.navigate(['/connection']), 1500);
-        },
-        error: (err) => {
-          console.error("Erreur d'inscription:", err);
-          this.errorMessage.set(
-            err.error?.message ||
-            err.error?.title ||
-            "Erreur lors de l'inscription."
-          );
-          this.loading.set(false);
-        }
-      });
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
 
-    get firstname() { return this.registerForm.get('firstname'); }
-    get lastname() { return this.registerForm.get('lastname'); }
-    get email() { return this.registerForm.get('email'); }
-    get password() { return this.registerForm.get('password'); }
-    get addressNumero() { return this.registerForm.get('addressNumero'); }
-    get addressRue() { return this.registerForm.get('addressRue'); }
-    get addressCode() { return this.registerForm.get('addressCode'); }
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.emailAlreadyExists = false;
+
+    const f = this.registerForm.value;
+
+    const user = {
+      name: f.lastname,
+      firstname: f.firstname,
+      email: f.email,
+      password: f.password,
+      adresse: `${f.addressRue} ${f.addressNumero}, ${f.addressCode}`,
+      id_Role: 2
+    };
+
+    this.inscriptionService.register(user).subscribe({
+      next: () => {
+        this.successMessage = 'Inscription réussie';
+        this.loading = false;
+        setTimeout(() => this.router.navigate(['/connection']), 1500);
+      },
+      error: (err) => {
+        this.loading = false;
+
+        console.log('ERREUR BACKEND:', err);
+
+        const errorMsg =
+          err.error?.message ||
+          err.error?.Message ||
+          err.error ||
+          '';
+
+        if (errorMsg.toString().toLowerCase().includes('email')) {
+          this.emailAlreadyExists = true;
+          this.registerForm.get('email')?.setErrors({ emailExists: true });
+        } else {
+          this.errorMessage = 'Erreur lors de l’inscription';
+        }
+      }
+    });
+  }
+
+  get firstname() { return this.registerForm.get('firstname'); }
+  get lastname() { return this.registerForm.get('lastname'); }
+  get email() { return this.registerForm.get('email'); }
+  get password() { return this.registerForm.get('password'); }
+  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
+  get addressNumero() { return this.registerForm.get('addressNumero'); }
+  get addressRue() { return this.registerForm.get('addressRue'); }
+  get addressCode() { return this.registerForm.get('addressCode'); }
 }
