@@ -1,27 +1,27 @@
 import { Routes } from '@angular/router';
 import { ConnectionComponent } from './connection/connection.component';
 import { InscriptionComponent } from './inscription/inscription.component';
-import {AccueilComponent} from './accueil/accueil.component';
+import { AccueilComponent } from './accueil/accueil.component';
 
 export const routes: Routes = [
-    {
-        path : 'connection',
-        component : ConnectionComponent,
-    },
 
-    {
-        path : 'insci',
-        component : InscriptionComponent,
-    },
+  {
+    path: 'accueil',
+    component: AccueilComponent
+  },
 
-    {
-      path : 'accueil',
-      component : AccueilComponent,
-    },
+  {
+    path: 'connection',
+    component: ConnectionComponent
+  },
 
-    {
-        path : '',
-        redirectTo : 'connection',
-        pathMatch : 'full',
-    }
+  {
+    path: 'insci',
+    component: InscriptionComponent
+  },
+
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];

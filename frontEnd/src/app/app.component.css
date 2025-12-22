@@ -1,0 +1,93 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 96px;
+  padding: 0 56px;
+  background: linear-gradient(90deg, #0f172a, #1e293b);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.nav-left {
+  display: flex;
+  align-items: flex-start;
+}
+
+.nav-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+  transform: scale(2.1);
+  cursor: pointer;
+}
+
+.nav-center {
+  display: flex;
+  gap: 40px;
+  margin: 0 auto;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navbar a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  position: relative;
+  padding: 8px 4px;
+  transition: color 0.25s ease;
+}
+
+.navbar a:hover {
+  color: #38bdf8;
+}
+
+.navbar a.active {
+  color: #38bdf8;
+}
+
+.navbar a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background-color: #38bdf8;
+  transition: width 0.3s ease;
+}
+
+.navbar a:hover::after,
+.navbar a.active::after {
+  width: 100%;
+}
+
+.icon {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.nav-right a:hover .icon,
+.nav-right a.active .icon {
+  transform: scale(1.15);
+  filter: invert(57%) sepia(87%) saturate(503%) hue-rotate(169deg);
+}
+
+.content {
+  padding: 40px;
+}
