@@ -25,7 +25,7 @@ template: `
     </nav>
 
     <nav class="nav-right">    
-    <a routerLink="/*" routerLinkActive="active">
+    <a routerLink="/panier" routerLinkActive="active">
       <img src="panier.png" alt="Panier" class="icon" />
     </a>
 

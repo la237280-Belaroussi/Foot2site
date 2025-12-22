@@ -2,11 +2,13 @@ import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, Router} from '@angular/router';
 import { ConnectionService } from '../Service/connection.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-connection',
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     RouterLink
   ],

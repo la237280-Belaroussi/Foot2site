@@ -2,13 +2,13 @@
   <h2>Créer un compte</h2>
   <p class="subtitle">Vous serez automatiquement enregistré comme client</p>
 
-  @if (successMessage()) {
-    <div class="alert alert-success">{{ successMessage() }}</div>
-  }
+  <div *ngIf="successMessage()" class="alert alert-success">
+    {{ successMessage() }}
+  </div>
 
-  @if (errorMessage()) {
-    <div class="alert alert-danger">{{ errorMessage() }}</div>
-  }
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    {{ errorMessage() }}
+  </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
@@ -22,12 +22,11 @@
         class="form-control"
         placeholder="Jean"
         [class.is-invalid]="firstname?.invalid && firstname?.touched">
-      @if (firstname?.invalid && firstname?.touched) {
-        <small class="text-danger">
-          @if (firstname?.errors?.['required']) { Le prénom est requis }
-          @if (firstname?.errors?.['minlength']) { Minimum 2 caractères }
-        </small>
-      }
+
+      <small class="text-danger" *ngIf="firstname?.invalid && firstname?.touched">
+        <span *ngIf="firstname?.errors?.['required']">Le prénom est requis</span>
+        <span *ngIf="firstname?.errors?.['minlength']">Minimum 2 caractères</span>
+      </small>
     </div>
 
     <!-- Nom -->
@@ -40,12 +39,11 @@
         class="form-control"
         placeholder="Dupont"
         [class.is-invalid]="lastname?.invalid && lastname?.touched">
-      @if (lastname?.invalid && lastname?.touched) {
-        <small class="text-danger">
-          @if (lastname?.errors?.['required']) { Le nom est requis }
-          @if (lastname?.errors?.['minlength']) { Minimum 2 caractères }
-        </small>
-      }
+
+      <small class="text-danger" *ngIf="lastname?.invalid && lastname?.touched">
+        <span *ngIf="lastname?.errors?.['required']">Le nom est requis</span>
+        <span *ngIf="lastname?.errors?.['minlength']">Minimum 2 caractères</span>
+      </small>
     </div>
 
     <!-- Email -->
@@ -58,12 +56,11 @@
         class="form-control"
         placeholder="jean.dupont@example.com"
         [class.is-invalid]="email?.invalid && email?.touched">
-      @if (email?.invalid && email?.touched) {
-        <small class="text-danger">
-          @if (email?.errors?.['required']) { L'email est requis }
-          @if (email?.errors?.['email']) { Format d'email invalide }
-        </small>
-      }
+
+      <small class="text-danger" *ngIf="email?.invalid && email?.touched">
+        <span *ngIf="email?.errors?.['required']">L'email est requis</span>
+        <span *ngIf="email?.errors?.['email']">Format d'email invalide</span>
+      </small>
     </div>
 
     <!-- Mot de passe -->
@@ -77,88 +74,62 @@
           class="form-control"
           placeholder="••••••••"
           [class.is-invalid]="password?.invalid && password?.touched">
+
         <button
           type="button"
           (click)="togglePasswordVisibility()"
-          class="toggle-password"
-          aria-label="Afficher/masquer le mot de passe">
+          class="toggle-password">
           {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
         </button>
       </div>
-      @if (password?.invalid && password?.touched) {
-        <small class="text-danger">
-          @if (password?.errors?.['required']) { Le mot de passe est requis }
-          @if (password?.errors?.['minlength']) { Minimum 6 caractères requis }
-        </small>
-      }
+
+      <small class="text-danger" *ngIf="password?.invalid && password?.touched">
+        <span *ngIf="password?.errors?.['required']">Mot de passe requis</span>
+        <span *ngIf="password?.errors?.['minlength']">Minimum 6 caractères</span>
+      </small>
     </div>
 
-    <!-- Section Adresse -->
+    <!-- Adresse -->
     <fieldset class="address-section">
       <legend>Adresse de livraison</legend>
 
       <div class="form-row">
         <div class="form-group col-4">
-          <label for="addressNumero">N° *</label>
+          <label>N° *</label>
           <input
             type="text"
-            id="addressNumero"
             formControlName="addressNumero"
-            placeholder="42"
-            class="form-control"
-            [class.is-invalid]="addressNumero?.invalid && addressNumero?.touched">
-          @if (addressNumero?.invalid && addressNumero?.touched) {
-            <small class="text-danger">Requis</small>
-          }
+            class="form-control">
         </div>
 
         <div class="form-group col-8">
-          <label for="addressRue">Rue *</label>
+          <label>Rue *</label>
           <input
             type="text"
-            id="addressRue"
             formControlName="addressRue"
-            placeholder="Rue de la Paix"
-            class="form-control"
-            [class.is-invalid]="addressRue?.invalid && addressRue?.touched">
-          @if (addressRue?.invalid && addressRue?.touched) {
-            <small class="text-danger">Min. 3 caractères</small>
-          }
+            class="form-control">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="addressCode">Code postal *</label>
+        <label>Code postal *</label>
         <input
           type="text"
-          id="addressCode"
           formControlName="addressCode"
-          placeholder="1000"
-          class="form-control"
-          [class.is-invalid]="addressCode?.invalid && addressCode?.touched">
-        @if (addressCode?.invalid && addressCode?.touched) {
-          <small class="text-danger">Code postal requis (4-5 chiffres)</small>
-        }
+          class="form-control">
       </div>
     </fieldset>
 
-    <!-- Boutons -->
-    <div class="form-actions">
-      <button
-        type="submit"
-        [disabled]="loading() || registerForm.invalid"
-        class="btn btn-primary">
-        @if (loading()) {
-          <span class="spinner"></span> Inscription en cours...
-        } @else {
-          S'inscrire
-        }
-      </button>
+    <!-- Bouton -->
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="loading() || registerForm.invalid">
 
-      <div class="link-section">
-        <span>Déjà un compte ?</span>
-        <a routerLink="/connection" class="link">Se connecter</a>
-      </div>
-    </div>
+      <span *ngIf="loading()">Inscription en cours...</span>
+      <span *ngIf="!loading()">S'inscrire</span>
+
+    </button>
+
   </form>
 </div>

@@ -1,0 +1,30 @@
+<h2>Mon panier</h2>
+
+<div *ngIf="panier$ | async as panier">
+  <p *ngIf="panier.length === 0">Votre panier est vide</p>
+
+  <div *ngFor="let item of panier" class="panier-item">
+    <strong>{{ item.nom }}</strong>
+    <span>{{ item.prix }} €</span>
+
+    <input
+      type="number"
+      min="1"
+      [value]="item.quantite"
+      (change)="update(item.produitId, $event)"
+    />
+
+    <button (click)="remove(item.produitId)">Supprimer</button>
+  </div>
+
+  <hr />
+<h3>Total : {{ total() | number:'1.2-2' }} €</h3>
+
+    <button
+      [disabled]="panier.length === 0"
+      (click)="validerCommande()"
+    >
+      Valider la commande
+    </button>
+
+</div>
