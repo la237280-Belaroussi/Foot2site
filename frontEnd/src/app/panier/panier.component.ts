@@ -45,9 +45,7 @@ export class PanierComponent implements OnInit {
 
   alert(`Commande validée ! Total : ${total.toFixed(2)} €`);
  this.panierService.clearPanier();
-  // plus tard :
-  // - envoyer au backend
-  // - vider le panier
+
 }
 
 }
