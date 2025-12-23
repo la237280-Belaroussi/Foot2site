@@ -40,7 +40,6 @@
     placeholder="jean.dupont@email.com"
   />
 
-  <!-- Email invalide (Angular) -->
   <small
     *ngIf="email?.touched && email?.errors?.['email'] && !emailAlreadyExists"
     class="text-danger"
@@ -48,7 +47,6 @@
     Email invalide
   </small>
 
-  <!-- Email requis -->
   <small
     *ngIf="email?.touched && email?.errors?.['required'] && !emailAlreadyExists"
     class="text-danger"
@@ -56,7 +54,6 @@
     Email requis
   </small>
 
-  <!-- Email déjà utilisé (Backend) -->
   <small *ngIf="emailAlreadyExists" class="text-danger">
     Cet email est déjà utilisé
   </small>
@@ -73,7 +70,7 @@
             placeholder="Minimum 6 caractères"
           />
           <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
-            👁️
+            👁
           </button>
         </div>
         <small *ngIf="password?.invalid && password?.touched" class="text-danger">

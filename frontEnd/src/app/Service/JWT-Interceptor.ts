@@ -1,9 +1,9 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ConnectionService } from './connection.service';
+import { AuthService } from './auth.service';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(ConnectionService);
+  const authService = inject(AuthService);
   const token = authService.getToken();
 
   // Ne pas ajouter le token pour la requête de login

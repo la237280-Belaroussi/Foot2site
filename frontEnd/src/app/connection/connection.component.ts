@@ -1,64 +1,57 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink, Router} from '@angular/router';
-import { ConnectionService } from '../Service/connection.service';
-
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../Service/auth.service';
 
 @Component({
   selector: 'app-connection',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink
-  ],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './connection.component.html',
-  styleUrl: './connection.component.css'
+  styleUrls: ['./connection.component.css']
 })
-
 export class ConnectionComponent {
- loginForm: FormGroup;
 
-  loading = signal(false);
-  errorMessage = signal('');
-  showPassword = signal(false);
+  loginForm: FormGroup;
+  loading = false;
+  errorMessage = '';
+  showPassword = false; 
 
   constructor(
     private fb: FormBuilder,
-    private authService: ConnectionService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
-  togglePasswordVisibility(): void {
-    this.showPassword.update(val => !val);
-  }
-
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loading.set(true);
-      this.errorMessage.set('');
-
-      this.authService.login(this.loginForm.value).subscribe({
-        next: () => {
-          this.router.navigate(['/accueil']);
-        },
-        error: (error: { error: { message: any; }; }) => {
-          this.errorMessage.set(
-            error.error?.message || 'Identifiants incorrects. Veuillez réessayer.'
-          );
-          this.loading.set(false);
-        }
-      });
-    } else {
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
-      });
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: (res) => {
+        this.authService.saveToken(res.token);
+        this.router.navigate(['/accueil']);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Erreur de connexion';
+        this.loading = false;
+      }
+    });
   }
 
-  get username() { return this.loginForm.get('username'); }
+  get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 }
