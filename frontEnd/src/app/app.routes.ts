@@ -32,6 +32,11 @@ export const routes: Routes = [
     },
 
     {
+        path : 'catalogue',
+        component : CatalogueComponent,
+    },
+
+    {
         path : '',
         redirectTo : 'catalogue',
         pathMatch : 'full',

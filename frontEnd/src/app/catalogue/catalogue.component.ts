@@ -31,6 +31,14 @@ export class CatalogueComponent implements OnInit {
   }
 
   addToCart(product: any) {
-    this.cartService.addToCart(product);
-  }
+  console.log('Produit ajouté:', product);
+
+  this.cartService.addToCart({
+    id: product.id,
+    name: product.name ?? product.nom_produit,
+    price: product.price ?? product.prix_unitaire_produit,
+    image: 'assets/tshirt.jpg'
+  });
+}
+
 }

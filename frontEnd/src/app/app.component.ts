@@ -18,7 +18,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
     </div>
   
       <nav class="nav-center">
-        <a routerLink="/*" routerLinkActive="active">Nos maillots</a>
+        <a routerLink="catalogue" routerLinkActive="active">Nos maillots</a>
         <a routerLink="/*" routerLinkActive="active">À propos</a>
         <a routerLink="/*" routerLinkActive="active">Contact</a>
       </nav>
