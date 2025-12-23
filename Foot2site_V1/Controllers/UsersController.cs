@@ -3,8 +3,10 @@ using Foot2site_V1.Modele;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 namespace Foot2site_V1.Controllers
 {
@@ -118,7 +120,13 @@ namespace Foot2site_V1.Controllers
                 return BadRequest(new { message = "Entrez des bonnes informations" });
             }
 
-            // Hash du mot de passe AVANT de créer l'utilisateur
+            var emailExists = await _context.User.AnyAsync(u => u.Email == user.Email);
+            if (emailExists)
+            {
+                return BadRequest(new { message = "Cet email est déjà utilisé" });
+            }
+
+            // Hash du mot de passe
             var salt = BCrypt.Net.BCrypt.GenerateSalt();
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
 
@@ -127,6 +135,7 @@ namespace Foot2site_V1.Controllers
 
             return CreatedAtAction("GetUser", new { id = user.Id_User }, user);
         }
+
 
 
 
@@ -156,11 +165,62 @@ namespace Foot2site_V1.Controllers
         /// <summary>
         /// Permet de vérifier si un utilisateur existe par son ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id_User == id);
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest(new { message = "Email ou mot de passe manquant" });
+            }
+
+            var user = await _context.User
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Email ou mot de passe incorrect" });
+            }
+
+            bool passwordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+            if (!passwordValid)
+            {
+                return Unauthorized(new { message = "Email ou mot de passe incorrect" });
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes("FOOT2SITE_SUPER_SECRET_JWT_KEY_2025_!@#");
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id_User.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role?.NomRole ?? "CLIENT")
+            };
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new LoginResponse
+            {
+                Token = tokenHandler.WriteToken(token),
+                Email = user.Email
+            });
+        }
     }
 }
+

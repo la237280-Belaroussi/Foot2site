@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Foot2site_V1.Data;
 using Foot2site_V1.Modele;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 
 namespace Foot2site_V1.Controllers
 {
@@ -39,24 +44,24 @@ namespace Foot2site_V1.Controllers
         // GET: api/Tailles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Taille>>> GetTaille()
-        { 
+        {
 
-            try{
+            try {
 
                 var taille = await _context.Taille.ToListAsync();
 
                 return Ok(taille);
 
-            }catch(Exception ex){
+            } catch (Exception ex) {
+                {
+                    return StatusCode(500, new
                     {
-                        return StatusCode(500, new
-                        {
-                            message = "Erreur lors de la récupération des tailles",
-                            details = ex.Message
-                        });
-                    }
+                        message = "Erreur lors de la récupération des tailles",
+                        details = ex.Message
+                    });
                 }
-         
+            }
+
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace Foot2site_V1.Controllers
 
                 if (taille == null)
                 {
-                    return NotFound(new {message = $"La taille avec l'ID {id} n'existe pas" 
+                    return NotFound(new { message = $"La taille avec l'ID {id} n'existe pas"
                     });
                 }
 
@@ -96,10 +101,10 @@ namespace Foot2site_V1.Controllers
                     message = "Erreur lors de la récupération du produit",
                     details = ex.Message
                 });
-               
+
             }
 
-      
+
         }
 
         /// <summary>
@@ -126,7 +131,7 @@ namespace Foot2site_V1.Controllers
 
                 if (id != taille.Id)
                 {
-                    return BadRequest(new {message = "L'ID dans l'URL ne correspond pas à l'ID du produit" 
+                    return BadRequest(new { message = "L'ID dans l'URL ne correspond pas à l'ID du produit"
                     });
                 }
 
@@ -257,8 +262,8 @@ namespace Foot2site_V1.Controllers
                 // Validation de l'ID
                 if (id <= 0)
                 {
-                    return BadRequest(new { 
-                        message = "L'ID doit être un nombre positif" 
+                    return BadRequest(new {
+                        message = "L'ID doit être un nombre positif"
                     });
                 }
 
@@ -268,8 +273,8 @@ namespace Foot2site_V1.Controllers
 
                 if (taille == null)
                 {
-                    return NotFound(new { 
-                        message = $"La taille avec l'ID {id} n'existe pas" 
+                    return NotFound(new {
+                        message = $"La taille avec l'ID {id} n'existe pas"
                     });
                 }
                 // Vérifier s'il y a des stocks associés
@@ -289,7 +294,7 @@ namespace Foot2site_V1.Controllers
                     message = $"La taille '{taille.taille}' a été supprimé avec succès"
                 });
             }
-            catch (DbUpdateException ex){
+            catch (DbUpdateException ex) {
                 return StatusCode(500, new
                 {
                     message = "Erreur lors de la suppression en base de données",
@@ -297,7 +302,7 @@ namespace Foot2site_V1.Controllers
                 });
             }
             catch (Exception ex) {
-                return StatusCode(500,new
+                return StatusCode(500, new
                 {
                     message = "Erreur lors de la création de la taille",
                     details = ex.Message
